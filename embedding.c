@@ -9,7 +9,8 @@ double my_c_sqrt(double x)
 
 int main()
 {
-    jl_init(NULL);
+    //jl_init(NULL);
+    jl_init("C:/Users/khkim/Julia-0.4.0-dev/bin");
     JL_SET_STACK_BASE;
 
     {
