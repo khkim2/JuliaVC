@@ -22,7 +22,7 @@ int main()
     {
         // Accessing the return value
 
-        jl_value_t *ret = jl_eval_string("sqrt(2.0)");
+        jl_value_t *ret = (jl_value_t *)jl_eval_string("sqrt(2.0)");
 
         if (jl_is_float64(ret)) {
             double retDouble = jl_unbox_float64(ret);
@@ -48,21 +48,18 @@ int main()
 
         jl_value_t* array_type = jl_apply_array_type( jl_float64_type, 1 );
         jl_array_t* x          = jl_alloc_array_1d(array_type , 10);
-        double* xData;
-		size_t i;
-		jl_function_t *func;
-
         JL_GC_PUSH1(&x);
-        xData = jl_array_data(x);
 
-        for(i=0; i<jl_array_len(x); i++)
+        double* xData = (double *)jl_array_data(x);
+
+        for(size_t i=0; i<jl_array_len(x); i++)
             xData[i] = i;
 
-        func  = jl_get_function(jl_base_module, "reverse!");
+        jl_function_t *func  = jl_get_function(jl_base_module, "reverse!");
         jl_call1(func, (jl_value_t*) x);
 
         printf("x = [");
-        for(i=0; i<jl_array_len(x); i++)
+        for(size_t i=0; i<jl_array_len(x); i++)
             printf("%e ", xData[i]);
         printf("]\n");
 
@@ -71,15 +68,12 @@ int main()
 
     {
         // define julia function and call it
-        jl_function_t *func;
-        jl_value_t* arg;
-		double ret;
 
         jl_eval_string("my_func(x) = 2*x");
 
-        func = jl_get_function(jl_current_module, "my_func");
-        arg = jl_box_float64(5.0);
-        ret = jl_unbox_float64(jl_call1(func, arg));
+        jl_function_t *func = jl_get_function(jl_current_module, "my_func");
+        jl_value_t* arg = jl_box_float64(5.0);
+        double ret = jl_unbox_float64(jl_call1(func, arg));
 
         printf("my_func(5.0) = %f\n", ret);
     }
@@ -89,7 +83,7 @@ int main()
 
         //jl_eval_string("println( ccall( :my_c_sqrt, Float64, (Float64,), 2.0 ) )");
 		jl_eval_string("println( ccall( (:my_c_sqrt, \"Debug/testdll.dll\"), Float64, (Float64,), 2.0 ) )");
-	}
+    }
 
     {
         // check for exceptions
