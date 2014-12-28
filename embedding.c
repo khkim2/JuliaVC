@@ -87,8 +87,9 @@ int main()
     {
         // call c function
 
-        jl_eval_string("println( ccall( :my_c_sqrt, Float64, (Float64,), 2.0 ) )");
-    }
+        //jl_eval_string("println( ccall( :my_c_sqrt, Float64, (Float64,), 2.0 ) )");
+		jl_eval_string("println( ccall( (:my_c_sqrt, \"Debug/testdll.dll\"), Float64, (Float64,), 2.0 ) )");
+	}
 
     {
         // check for exceptions

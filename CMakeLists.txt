@@ -11,7 +11,10 @@ include_directories(
 
 link_directories(${CMAKE_SOURCE_DIR})
 
-# embedding.c example from julia repository
+# test embedding.c example from julia repository
 add_executable(example embedding.c)
 
 target_link_libraries(example ./libjulia)
+
+# test ccall dll function
+add_library(testdll SHARED testdll.c)
